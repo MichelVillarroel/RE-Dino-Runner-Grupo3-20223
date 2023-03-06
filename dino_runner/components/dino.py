@@ -1,11 +1,13 @@
+from typing import Self
 import pygame
 from pygame.sprite import Sprite
-from dino_runner.utils.constants import JUMPING, RUNNING
+from dino_runner.utils.constants import DUCKING, JUMPING, RUNNING
 
 class Dino(Sprite):
     X_POS = 80
     Y_POS = 310
     JUMP_VEL = 8
+    DUCK_VEL = 2
 
     def __init__(self):
         self.image = RUNNING [0]
@@ -17,6 +19,7 @@ class Dino(Sprite):
         self.dino_duck = False
         self.dino_jump = False
         self.jump_vel = self.JUMP_VEL
+        self.duck_vel = self.DUCK_VEL
 
     def update(self, user_input):
         if self.dino_run:
@@ -30,7 +33,7 @@ class Dino(Sprite):
             self.dino_run = False
             self.dino_duck = False
             self.dino_jump = True
-        elif user_input[pygame.K_DOWN] and not self.dino_duck:
+        elif user_input[pygame.K_DOWN] and not self.dino_duck :
             self.dino_run = False
             self.dino_duck = True
             self.dino_jump = False
@@ -56,7 +59,16 @@ class Dino(Sprite):
         self.step_index += 1
 
     def duck(self):
-        pass
+        if self.step_index <= 5:
+           self.image = DUCKING[0]
+        else:
+           self.image = DUCKING[1]
+
+        self.dino_rect.x = self.X_POS
+        self.dino_rect.y = self.Y_POS + 30
+        self.step_index += 1
+        self.dino_duck = False
+
 
     def jump(self):
         self.image = JUMPING
